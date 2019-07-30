@@ -34,22 +34,18 @@
 # -------------------------------------
 
 def additable_flood?(after_sections, dup)
-  cur_dup = 0
-  is_cur = false
-  is_dup = false
+  sim_dup = 0
   after_sections.size.times do |i|
     case after_sections[i]
     when '\\'
-      cur_dup -= 1
+      sim_dup -= 1
     when '/'
-      cur_dup += 1
-
-      is_dup = true if dup >= 0
-      is_cur = true if cur_dup - dup >= 0
+      sim_dup += 1
+      return false if sim_dup > 0
     end
   end
 
-  is_dup && is_cur
+  true
 end
 
 sections = gets
@@ -72,7 +68,7 @@ sections.size.times do |i|
       area += step - ds
       dup -= 1
 
-      if sections[i] == '/' && additable_flood?(sections[i+1..-1], dup)
+      if dup != 0 && additable_flood?(sections[i+1..-1], dup)
         floods << area
         area = 0
         down_step = []
