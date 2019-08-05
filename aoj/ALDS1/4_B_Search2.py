@@ -33,55 +33,40 @@ s = list(map(int, input().split()))
 q = input()
 t = list(map(int, input().split()))
 
-max_s = max(s)
-min_s = min(s)
-
-center_i = int(n / 2)
+center = int(n / 2)
 result = 0
 
 for ti in t:
-  if max_s is ti or min_s is ti:
-    result += 1
-    continue
-
-  devided_i = center_i
-  if s[center_i] < ti:
-    while ti < s[int(devided_i+devided_i/2)] or ti == s[int(devided_i+devided_i/2)]:
-      devided_i += int(devided_i/2)
-      if s[devided_i] == ti:
-        break
-  elif ti < s[center_i]:
-    while s[int(devided_i-devided_i/2)] < ti or ti == s[int(devided_i-devided_i/2)]:
-      devided_i -= int(devided_i/2)
-      if s[devided_i] == ti or int(devided_i+devided_i/2) > n:
-        break
+  if s[center] < ti:
+    left = int(n / 2)
+    right = n - 1
+  elif ti < s[center]:
+    left = 0
+    right = int(n / 2)
   else:
     result += 1
     continue
 
-  start_i = devided_i
+  while True:
+    tmp = int(left + int((right - left) / 2))
+    if 'current' in locals() and current == tmp:
+      if right == (n - 1):
+        current += 1
+      else:
+        current -= 1
+    else:
+      current = tmp
 
-  devided_i = center_i
-  if ti < s[center_i]:
-    while ti < s[int(devided_i-devided_i/2)] or ti == s[int(devided_i-devided_i/2)]:
-      devided_i -= int(devided_i/2)
-      if s[devided_i] == ti:
+    if s[current] < ti:
+      if current < left:
         break
-  elif s[center_i] < ti:
-    while s[int(devided_i+devided_i/2)] < ti or ti == s[int(devided_i+devided_i/2)]:
-      devided_i += int(devided_i/2)
-      if s[devided_i] == ti or n > devided_i+devided_i/2:
+      left = current
+    elif ti < s[current]:
+      if right < current:
         break
-
-  end_i = devided_i
-  target_list = s[start_i:end_i]
-
-  print(ti)
-  print(start_i)
-  print(end_i)
-  print(target_list)
-
-  if ti in target_list:
-    result += 1
+      right = current
+    elif ti == s[current]:
+      result += 1
+      break
 
 print(result)
