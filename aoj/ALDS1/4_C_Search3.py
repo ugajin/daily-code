@@ -26,85 +26,86 @@
 #
 # -------------------------------------
 
-def include_dic(l, s):
-  n = int(len(l))
-  if n == 0:
-    return False
-  if s < l[0] or l[n-1] < s:
-    return False
+# def find_range(l, s):
+#   i = 0
+#   while True:
+#     j = (2 ** i) - 1
+#     if len(l) <= j:
+#       return [(2 ** (i-1) -1), len(l)]
+#     if l[j] <= s:
+#       i += 1
+#     else:
+#       return [(2 ** (i-1) -1), j]
+#
+# def search(l, s):
+#   n = len(l)
+#   if n == 0 or s < l[0]:
+#     return 0
+#   if l[n-1] < s:
+#     return n
+#
+#   range_i = find_range(l, s)
+#   center = int((range_i[1] - range_i[0]) / 2) + range_i[0]
+#
+#   if l[center] < s:
+#     left = center
+#     right = range_i[1]
+#   elif s < l[center]:
+#     left = range_i[0]
+#     right = center
+#   else:
+#     return center
+#   
+#   while True:
+#     tmp = left + int((right - left) / 2)
+#     if 'current' in locals() and current == tmp:
+#       if right == (range_i[1] - 1):
+#         current += 1
+#       else:
+#         current -= 1
+#     else:
+#       current = tmp
+#   
+#     if current < left:
+#       return left+1
+#     elif right <= current:
+#       return current
+#
+#     if l[current] < s:
+#       left = current
+#     elif s < l[current]:
+#       right = current
+#     else:
+#       return current
+#
+# def find(l, s):
+#   i = search(l, s)
+#   if len(l)-1 < i:
+#     return False
+#
+#   return l[i] == s
+#
+# def insert(l, s):
+#   i = search(l, s)
+#   l.insert(i, s)
+#   return l
+#
+# dic = []
+#
+# for i in range(int(input())):
+#   call = input().split()
+#   if call[0] == 'insert':
+#     dic = insert(dic, call[1])
+#   elif find(dic, call[1]):
+#     print('yes')
+#   else:
+#     print('no')
 
-  center = int(n / 2)
 
-  if l[center] < s:
-    left = int(n / 2)
-    right = n - 1
-  elif s < l[center]:
-    left = 0
-    right = int(n / 2)
-  else:
-    return True
-  
-  while True:
-    tmp = left + int((right - left) / 2)
-    if 'current' in locals() and current == tmp:
-      if right == (n - 1):
-        current += 1
-      else:
-        current -= 1
-    else:
-      current = tmp
-  
-    if current < left or right < current:
-      return False
-
-    if l[current] < s:
-      if current <= left:
-        return False
-      left = current
-    elif s < l[current]:
-      if right <= current:
-        return False
-      right = current
-    elif s == l[current]:
-      return True
-
-def insert_dic(l, s):
-  for i in range(len(l)):
-    li = l[i]
-    if s < l[i]:
-      l.insert(i, s)
-      return l
-  l.append(s)
-  return l
-
-n = int(input())
-dic_a = []
-dic_c = []
-dic_g = []
-dic_t = []
-
-for i in range(n):
-  call = input().split()
-  if call[0] == 'insert':
-    if call[1][0] == 'A':
-      dic_a = insert_dic(dic_a, call[1])
-    if call[1][0] == 'C':
-      dic_c = insert_dic(dic_c, call[1])
-    if call[1][0] == 'G':
-      dic_g = insert_dic(dic_g, call[1])
-    if call[1][0] == 'T':
-      dic_g = insert_dic(dic_t, call[1])
-  else:
-    if call[1][0] == 'A':
-      tar_dic = dic_a
-    if call[1][0] == 'C':
-      tar_dic = dic_c
-    if call[1][0] == 'G':
-      tar_dic = dic_g
-    if call[1][0] == 'T':
-      tar_dic = dic_t
-
-    if include_dic(tar_dic, call[1]):
-      print('yes')
-    else:
-      print('no')
+d={}
+for _ in range(int(input())):
+    a,b=input().split()
+    if a=='find':
+        if b in d:print('yes')
+        else:print('no')
+    else:d[b]=0
