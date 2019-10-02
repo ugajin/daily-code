@@ -1,21 +1,25 @@
-def search(m, list_a, n):
-  for i in range(0, n-1): 
-    j = i
-    while j == n:
-      if list_a[i] + list_a[j] == m:
-        return True
-      else:
-        j += 1
+import itertools
 
-  return False
+def hash_map(l, n):
+  l_pairs = []
+  for i in range(2, n+1):
+    l_pairs += list(itertools.combinations(l, i))
+
+  mapping = l
+  for pair in l_pairs:
+    mapping.append(sum(pair))
+
+  return mapping
 
 n = int(input())
 list_a = list(map(int, input().split()))
 q = int(input())
 list_m = list(map(int, input().split()))
 
+mapping = hash_map(list_a, n)
+
 for m in list_m:
-  if search(m, list_a, n):
+  if m in mapping: 
     print('yes')
   else:
     print('no')
