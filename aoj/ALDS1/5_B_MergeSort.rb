@@ -1,46 +1,58 @@
-def mergeSort(count, left, right)
-  return [count+1, left] if right.nil?
+class Solver
+  @@count = 0
+  @@a
 
-  result = []
-  while true do
-    count += 1
+  def self.init_a(a)
+    @@a = a
+  end
 
-    if left[0] < right[0]
-      result << left.shift
-    else
-      result << right.shift
+  def self.merge(left, mid, right)
+    n1 = mid - left
+    n2 = right - mid
+    l = @@a[left..mid]
+    r = @@a[mid+1..right]
+  
+    (0..n1-1).each do |i|
+      l[i] = @@a[left + i]
     end
-
-    if left.length == 0
-      result.concat right
-      return [count, result]
+  
+    (0..n2-1).each do |i|
+      r[i] = @@a[mid + i]
     end
-
-    if right.length == 0
-      count += 1
-      result.concat left
-      return [count, result]
+  
+    l[n1] = Float::INFINITY
+    r[n2] = Float::INFINITY
+    i = 0
+    j = 0
+    (left..right-1).each do |k|
+      @@count += 1
+      if l[i] <= r[j]
+        @@a[k] = l[i]
+        i = i + 1
+      else 
+        @@a[k] = r[j]
+        j = j + 1
+      end
     end
+  end
+  
+  def self.mergeSort(left, right)
+    if left+1 < right
+      mid = (left + right)/2
+      mergeSort(left, mid)
+      mergeSort(mid, right)
+      merge(left, mid, right)
+    end
+  end
+
+  def self.puts_result
+    puts @@a.join(' ')
+    puts @@count
   end
 end
 
 n = gets.to_i
-s = gets.split(' ').map { |si| [si.to_i] }
-count = 0
-
-while true do
-  sorted = []
-  while true do
-    res = mergeSort(count, s.shift, s.shift)
-    count = res[0]
-    sorted << res[1] unless res[1].nil?
-
-    break if s.length == 0
-  end
-
-  s = sorted
-  break if s.length == 1
-end
-
-puts s[0].join(' ')
-puts count
+a = gets.split(' ').map(&:to_i)
+Solver.init_a(a)
+Solver.mergeSort(0, n)
+Solver.puts_result
