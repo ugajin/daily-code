@@ -1,58 +1,58 @@
 class Solver
-  attr_accessor :lines
+  attr_reader :lines, :n
 
-  def initialize
-    @lines = []
+  def initialize(line, n)
+    @lines = [line]
+    @n = n
   end
 
-  def add_lines(line)
-    @lines << line
-  end
-
-  def clear_lines!
-    @lines = []
-  end
-
-  def sort_lines!
-    @lines.sort! { |line| line[0].x }
-  end
-
-  def calc_koch
-    tmp_lines = lines.dup
-    clear_lines!
-
-    tmp_lines.each do |line|
-      line.modify_point_1(Point.new(line.x1, line.x2 / 3))
-      line.points[1]
-      line.modify_point_2(Point.new(line.x2 - line.x1
+  def exec
+    n.times do |i|
+      cur_lines = @lines.dup
+      cur_lines.each_with_index do |line, i|
+        koch(line, i)
+      end
     end
 
-    sort_lines!
+    puts_result
   end
 
   def puts_result
-    lines.each { |line| line.each { |point| puts point[0].join(' '); puts point[1].join(' ') } }
+    lines.each(&:puts_result)
+  end
+
+  def koch(line, idx)
+    p1 = line.start_point
+    p2 = line.end_point
+
+    length = p2.x - p1.x
+    length_devide3 = length / 3
+
+    s = Point.new(length_devide3, 0)
+    t = Point.new(length_devide3 * 2, 0)
+    u = Point.new(length / 2, Math.sqrt((length_devide3 ** 2) - (length_devide3 / 2) ** 2))
+
+    line1 = Line.new(p1, s)
+    line2 = Line.new(s, u)
+    line3 = Line.new(u, t)
+    line4 = Line.new(t, p2)
+
+    lines.delete_at(idx)
+    lines.insert(idx, line1, line2, line3, line4)
   end
 end
 
 class Line
-  attr_reader :x1, :x2, :y1, :y2
+  attr_accessor :start_point, :end_point
 
-  def initialize(point_1, point_2)
-    @x1 = point_1.x
-    @y1 = point_1.y
-    @x2 = point_2.x
-    @y2 = point_2.y
+  def initialize(start_point, end_point)
+    @start_point = start_point
+    @end_point = end_point
   end
 
-  def modify_point_1(point)
-    @x1 = point.x
-    @y1 = point.y
-  end
-
-  def modify_point_2(point)
-    @x2 = point.x
-    @y2 = point.y
+  def puts_result
+    puts "#{@start_point.x.floor(8)} #{@start_point.y.floor(8)}"
+    puts "#{@end_point.x.floor(8)} #{@end_point.y.floor(8)}"
   end
 end
 
@@ -67,13 +67,8 @@ end
 
 n = gets.to_i
 
-point_1 = Point.new(0, 0)
-point_2 = Point.new(100.to_f(6), 0)
-line = Line.new(point_1, point_2)
-solver = Solver.new
-solver.add_lines(line)
-n.times do |i|
-  solver.calc_koch
-end
+start_point = Point.new(0, 0)
+end_point = Point.new(100.to_f, 0)
+line = Line.new(start_point, end_point)
 
-solver.puts_result
+Solver.new(line, n).exec
