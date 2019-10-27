@@ -1,39 +1,39 @@
 class Solver
-  def initialize
-    @n = n
+  def initialize(n, cards)
+    @n = n-1
     @cards = cards
-    @p = 0
   end
 
   def exec
-    if p < @n
-      q = partition
-      quicksort(@p, q-1)
-      quicksort(q+1, @n)
-
+    quicksort(0, @n)
     puts_stable
     puts_result
   end
 
-  def partition
-    x = @cards.pop
-    i = @p-1
+  def quicksort(left, right)
+    if left < right
+      q = partition(left, right)
+      quicksort(left, q-1)
+      quicksort(q+1, right)
+    end
+  end
 
-    (@p..@n-1).each do |j|
-      if @cards[j].num <= x.num
+  def partition(left, right)
+    pivot = @cards[right]
+    @cards[right] = nil
+    i = left-1
+
+    (left..right-1).each do |j|
+      if @cards[j].num <= pivot.num
         i += 1
         @cards[i], @cards[j] = @cards[j], @cards[i]
       end
     end
 
-    @cards[i+1], @cards[r] = @cards[r], @cards[i+1]
-    @cards[i+1] = x
+    @cards[i+1], @cards[right] = @cards[right], @cards[i+1]
+    @cards[i+1] = pivot
 
     return i+1
-  end
-
-  def quicksort(left, right)
-    @cards
   end
 
   def puts_result
@@ -41,13 +41,22 @@ class Solver
   end
 
   def puts_stable
+    @cards.each_with_index do |card, i|
+      next_card = @cards[i+1]
+      next unless card.num == next_card&.num
+
+      return puts 'Not stable' if next_card&.id < card.id
+    end
+
+    puts 'Stable'
   end
 end
 
 class Card
-  attr_reader :mark, :num
+  attr_reader :id, :mark, :num
 
-  def initialize(mark, num)
+  def initialize(id, mark, num)
+    @id = id
     @mark = mark
     @num = num
   end
@@ -55,9 +64,9 @@ end
 
 n = gets.to_i
 cards = []
-(0..n).times do |i|
+n.times do |i|
   card = gets.split(' ')
-  cards << Card.new(card[0], card[1].to_i)
+  cards << Card.new(i, card[0], card[1].to_i)
 end
 
 Solver.new(n, cards).exec
