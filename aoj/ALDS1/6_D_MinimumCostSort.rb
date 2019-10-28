@@ -9,35 +9,9 @@ class Solver
   end
 
   def exec
-    quicksort(0, @n-1)
+    @baggages.sort!
     calc_cost
     puts_result
-  end
-
-  def quicksort(left, right)
-    if left < right
-      q = partition(left, right)
-      quicksort(left, q-1)
-      quicksort(q+1, right)
-    end
-  end
-
-  def partition(left, right)
-    pivot = baggages[right]
-    baggages[right] = nil
-    i = left-1
-
-    (left..right-1).each do |j|
-      if baggages[j] <= pivot
-        i += 1
-        baggages[i], baggages[j] = baggages[j], baggages[i]
-      end
-    end
-
-    baggages[i+1], baggages[right] = baggages[right], baggages[i+1]
-    baggages[i+1] = pivot
-
-    return i+1
   end
 
   def calc_cost
